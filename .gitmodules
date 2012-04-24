@@ -1,3 +1,0 @@
-[submodule "src/jquery"]
-	path = src/jquery
-	url = git://github.com/jquery/jquery.git
