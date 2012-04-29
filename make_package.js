@@ -9,6 +9,11 @@ fs.readFile( "./jquery/version.txt", function( err, version ) {
 		throw err;
 	}
 
+	version = "" + version;
+	if ( version.split( "." ).length === 2 ) {
+		version += ".0";
+	}
+
 	wrench.rmdirSyncRecursive( "./package", true );
 	wrench.mkdirSyncRecursive( "./package/lib", 0777);
 	wrench.mkdirSyncRecursive( "./package/test", 0777);
