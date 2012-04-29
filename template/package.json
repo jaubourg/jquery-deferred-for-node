@@ -8,11 +8,11 @@
 		"jquery",
 		"when"
 	],
-	"homepage": "https://github.com/jaubourg/jquery-deferred",
+	"homepage": "https://github.com/jaubourg/jquery-deferred-for-node",
 	"author": "Julian Aubourg <j@ubourg.net> (http://jaubourg.net/)",
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/jaubourg/jquery-deferred.git"
+		"url": "git://github.com/jaubourg/jquery-deferred-for-node.git"
 	},
 	"main": "lib/jquery-deferred.js",
 	"dependencies": {
