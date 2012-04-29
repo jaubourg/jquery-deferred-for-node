@@ -1,0 +1,26 @@
+{
+	"name": "jquery-deferred",
+	"version": "@VERSION@",
+	"description": "jQuery's Deferreds source and unit tests ported verbatim to nodejs using minimal, automated, code transformation",
+	"keywords": [
+	    "callback",
+		"deferred",
+		"jquery",
+		"when"
+	],
+	"homepage": "https://github.com/jaubourg/jquery-deferred",
+	"author": "Julian Aubourg <j@ubourg.net> (http://jaubourg.net/)",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/jaubourg/jquery-deferred.git"
+	},
+	"main": "lib/jquery-deferred.js",
+	"dependencies": {
+	},
+	"devDependencies": {
+		"nodeunit": ">=0.5.1"
+	},
+	"engines": {
+		"node": ">=0.6.0"
+	}
+}
