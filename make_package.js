@@ -9,7 +9,7 @@ fs.readFile( "./jquery/version.txt", function( err, version ) {
 		throw err;
 	}
 
-	version = "" + version;
+	version = ( "" + version ).trim();
 	if ( version.split( "." ).length === 2 ) {
 		version += ".0";
 	}
