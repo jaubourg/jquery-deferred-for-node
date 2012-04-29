@@ -20,7 +20,7 @@ This is the exact same code, running the exact same unit tests. Why use a bad co
 | jQuery        | jquery-deferred      |
 | -------------:|:--------------------:|
 | `$.Deferred`  | `Deferred`           |
-| `$._Deferred  | `Deferred._Deferred` |
+| `$._Deferred` | `Deferred._Deferred` |
 | `$.when`      | `Deferred.when`      |
 | `$.Callbacks` | `Deferred.Callbacks` |
 
