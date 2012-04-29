@@ -7,13 +7,15 @@ var toString = Function.prototype.call.bind( Object.prototype.toString ),
 
 module.exports = {
 	each: function( object, func ) {
-		var key, value;
-		if ( object[ "forEach" ] ) {
-			object.forEach(function( value, id ) {
-				func.call( value, id, value );
-			});
-		} else {
+		var key, value,
+			length = object.length;
+		if ( length === undefined || module.exports.type( object ) === "function" ) {
 			for( key in object ) {
+				value = object[ key ];
+				func.call( value, key, value );
+			}
+		} else {
+			for ( key = 0; key < length; key++ ) {
 				value = object[ key ];
 				func.call( value, key, value );
 			}
