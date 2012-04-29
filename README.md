@@ -17,7 +17,7 @@ This is the exact same code, running the exact same unit tests. Why use a bad co
 
 ### Correspondances
 
-| jQuery        | jquery-deferred      |
+| jQuery        | JQDeferred           |
 | -------------:|:--------------------:|
 | `$.Deferred`  | `Deferred`           |
 | `$._Deferred` | `Deferred._Deferred` |
