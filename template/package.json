@@ -1,5 +1,5 @@
 {
-	"name": "jquery-deferred",
+	"name": "JQDeferred",
 	"version": "@VERSION@",
 	"description": "jQuery deferreds source and unit tests ported verbatim to nodejs using minimal, automated, code transformation",
 	"keywords": [
