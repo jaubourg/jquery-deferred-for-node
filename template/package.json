@@ -1,7 +1,7 @@
 {
 	"name": "jquery-deferred",
 	"version": "@VERSION@",
-	"description": "jQuery's Deferreds source and unit tests ported verbatim to nodejs using minimal, automated, code transformation",
+	"description": "jQuery deferreds source and unit tests ported verbatim to nodejs using minimal, automated, code transformation",
 	"keywords": [
 	    "callback",
 		"deferred",
