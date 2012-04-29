@@ -1,6 +1,6 @@
 // ultra minimal version of jQuery
 // needed to have Deferred code work
-// (also look into import/code/main.js for some transformations that help)
+// (also look into import/src[-...].js for some transformations that help)
 var toString = Function.prototype.call.bind( Object.prototype.toString ),
 	r_cleanType = /^\[object |\]$/g,
 	typeCache = {};
