@@ -1,6 +1,7 @@
 require( "plus" );
 
-var fs = require( "fs" );
+var fs = require( "fs" ),
+	wrench = require( "wrench" );
 
 fs.readFile( "./jquery/version.txt", function( err, version ) {
 
@@ -8,13 +9,9 @@ fs.readFile( "./jquery/version.txt", function( err, version ) {
 		throw err;
 	}
 
-	try {
-
-		fs.mkdirSync( "./package" );
-		fs.mkdirSync( "./package/test" );
-		fs.mkdirSync( "./package/lib" );
-
-	} catch( e ) {}
+	wrench.rmdirSyncRecursive( "./package", true );
+	wrench.mkdirSyncRecursive( "./package/lib", 0777);
+	wrench.mkdirSyncRecursive( "./package/test", 0777);
 
 	var basename = require( "path").basename;
 		imports = require( "./import/main" ),
