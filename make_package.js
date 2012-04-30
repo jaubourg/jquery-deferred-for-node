@@ -6,7 +6,8 @@ var fs = require( "fs" ),
 	exec = require('child_process').exec,
 	imports = require( "./import/main" ),
 	versions = "1.5|1.5.1|1.5.2|1.6|1.6.2|1.6.3|1.6.4|1.7|1.7.1|1.7.2".split( "|" ),
-	testDirs = [];
+	testDirs = [],
+	start = +new Date();
 
 (function next() {
 
@@ -28,7 +29,7 @@ var fs = require( "fs" ),
 			});
 		}
 
-		console.log( "\n---- STARTING GENERATION for JQUERY " + version + " ------\n" );
+		console.log( "\n---- STARTING GENERATION for JQUERY " + version + " ----\n" );
 
 		wrench.rmdirSyncRecursive( packageDir, true );
 		wrench.mkdirSyncRecursive( packageDir + "lib", 0777);
@@ -101,6 +102,8 @@ var fs = require( "fs" ),
 				});
 			});
 		});
+	} else {
+		console.log( "\n---- FINISHED IN " + ( (new Date) - start ) * 0.001 + " sec ----\n" );
 	}
 
 })();
