@@ -1,6 +1,7 @@
 require( "plus" );
 
 var fs = require( "fs" ),
+	path = require( "path" ),
 	wrench = require( "wrench" ),
 	basename = require( "path" ).basename,
 	exec = require('child_process').exec,
@@ -9,7 +10,7 @@ var fs = require( "fs" ),
 	testDirs = [],
 	start = +new Date();
 
-(function next() {
+function next() {
 
 	if ( versions.length ) {
 
@@ -106,5 +107,24 @@ var fs = require( "fs" ),
 		console.log( "\n---- FINISHED IN " + ( (new Date) - start ) * 0.001 + " sec ----\n" );
 	}
 
-})();
+}
 
+path.exists( "./jquery", function( exists ) {
+
+	if ( exists ) {
+		next();
+	} else {
+		console.log( "\n---- CLONING JQUERY REPOSITORY ----\n" );
+		exec( "git clone git://github.com/jquery/jquery.git", function( error, stdout, stderr ) {
+
+			if ( error ) {
+				throw stderr;
+			}
+
+			console.log( stdout );
+
+			next();
+		});
+	}
+
+});
