@@ -2,30 +2,34 @@
 // needed to have Deferred code work
 // (also look into import/src[-...].js for some transformations that help)
 var toString = Function.prototype.call.bind( Object.prototype.toString ),
+	indexOf = Function.prototype.call.bind( Array.prototype.indexOf ),
 	r_cleanType = /^\[object |\]$/g,
 	typeCache = {};
 
 module.exports = {
 	each: function( object, func ) {
-		var key, value,
-			length = object.length;
+		func = Function.prototype.call.bind( func );
+		var length = object.length,
+			key;
 		if ( length === undefined || module.exports.type( object ) === "function" ) {
 			for( key in object ) {
-				value = object[ key ];
-				func.call( value, key, value );
+				func( object[ key ], key, object[ key ] );
 			}
 		} else {
 			for ( key = 0; key < length; key++ ) {
-				value = object[ key ];
-				func.call( value, key, value );
+				func( object[ key ], key, object[ key ] );
 			}
 		}
 	},
 	extend: function( target, src ) {
-		for( var key in src ) {
-			target[ key ] = src[ key ];
+		if ( src ) {
+			for( var key in src ) {
+				target[ key ] = src[ key ];
+			}
 		}
+		return target;
 	},
+	inArray: indexOf,
 	noop: function() {},
 	type: function( obj ) {
 		var type = ( obj == null ? String : toString )( obj );
