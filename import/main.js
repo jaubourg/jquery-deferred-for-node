@@ -19,7 +19,6 @@ function chain( fns ) {
 	},
 	unit: {
 		inputDir: "./jquery/test/unit/",
-		outputDir: "./package/test/",
 		filter: [ srcFilter, unitFilter ]
 	}
 }).forEach(function( data, type ) {
@@ -35,16 +34,7 @@ function chain( fns ) {
 				return callback && callback( err );
 			}
 			code = filter( "" + code ).trim() + "\n";
-			if ( data.outputDir ) {
-				fs.writeFile( data.outputDir + id + ".js", code, callback ? function() {
-					if ( err ) {
-						return callback( err );
-					}
-					callback( undefined, code );
-				} : undefined );
-			} else {
-				callback( undefined, code );
-			}
+			callback && callback( undefined, code );
 		});
 	};
 });
