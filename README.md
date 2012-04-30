@@ -17,15 +17,22 @@ This is the exact same code, running the exact same unit tests. Why use a bad co
 
 ### Correspondances
 
-| jQuery        | jquery-deferred      |
+| jQuery        | JQDeferred           |
 | -------------:|:--------------------:|
 | `$.Deferred`  | `Deferred`           |
-| `$._Deferred  | `Deferred._Deferred` |
+| `$._Deferred` | `Deferred._Deferred` |
 | `$.when`      | `Deferred.when`      |
 | `$.Callbacks` | `Deferred.Callbacks` |
 
 `_Deferred` only available prior to 1.7.0
+
 `Callbacks` only available as of 1.7.0.
+
+### Documentation
+
+Just head to the [jQuery API site](http://api.jquery.com/):
+* [`Deferred`](http://api.jquery.com/category/deferred-object/)
+* [`Callbacks`](http://api.jquery.com/category/callbacks-object/)
 
 ### Versioning
 
