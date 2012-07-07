@@ -109,7 +109,7 @@ function next() {
 
 }
 
-path.exists( "./jquery", function( exists ) {
+fs.exists( "./jquery", function( exists ) {
 
 	if ( exists ) {
 		next();
