@@ -1,11 +1,11 @@
 require( "plus" );
 
 var fs = require( "fs" ),
+	path = require( "path" ),
 	wrench = require( "wrench" ),
-	basename = require( "path" ).basename,
 	exec = require('child_process').exec,
 	imports = require( "./import/main" ),
-	versions = "1.5|1.5.1|1.5.2|1.6|1.6.2|1.6.3|1.6.4|1.7|1.7.1|1.7.2".split( "|" ),
+	versions,
 	testDirs = [],
 	start = +new Date();
 
@@ -43,7 +43,7 @@ function next() {
 				return code;
 			}
 		}).forEach(function( filter, filename ) {
-			fs.readFile( "./template/" + basename( filename ), function( err, data ) {
+			fs.readFile( "./template/" + path.basename( filename ), function( err, data ) {
 				if ( err ) {
 					throw err;
 				}
@@ -109,10 +109,27 @@ function next() {
 
 }
 
+console.log( "\n---- READING VERSIONS FILE ----\n" );
+
+fs.readFile( "./versions.txt", function( error, content ) {
+	if ( error ) {
+		throw error;
+	} else {
+		if ( versions ) {
+			process.nextTick( next );
+		}
+		versions = ( "" + content ).split( /\s+/ );
+	}
+});
+
 fs.exists( "./jquery", function( exists ) {
 
 	if ( exists ) {
-		next();
+		if ( versions ) {
+			next();
+		} else {
+			versions = true;
+		}
 	} else {
 		console.log( "\n---- CLONING JQUERY REPOSITORY ----\n" );
 		exec( "git clone git://github.com/jquery/jquery.git", function( error, stdout, stderr ) {
@@ -123,7 +140,11 @@ fs.exists( "./jquery", function( exists ) {
 
 			console.log( stdout );
 
-			next();
+			if ( versions ) {
+				next();
+			} else {
+				versions = true;
+			}
 		});
 	}
 
