@@ -1,4 +1,4 @@
-var r_extend = /\njQuery.extend\({\n((?:.|\n)+?)\n}\);\n/g,
+var r_extend = /(?:\n|^)jQuery.extend\({\n((?:.|\n)+?)\n}\);(?:\n|$)/g,
 	r_decl = /(\s+)(_?Deferred|when)\:((?:.|\n)+?)\1},?/g,
 	r_tab = /\n\t/g;
 

@@ -1,7 +1,7 @@
 var r_module = /^\s*module\(.*$/,
 	r_stop = /(^|\b)stop\(\);/g,
 	r_start = /(^|\b)start(\b|$)/g,
-	r_test = /^(\s*)test\(([^,]+),.+$/,
+	r_test = /^(\s*)(?:asyncTest|test)\(([^,]+),.+$/,
 	r_is_local = /if \( !isLocal \) \{(?:.|\n)+?\}/g,
 	r_ops = /(^|\b)(deepEqual|equals?|expect|notDeepEqual|notStrictEqual|notEqual|ok|same|strictEqual|throws)\(/g,
 	r_interesting = /Deferred|Callbacks|when/,

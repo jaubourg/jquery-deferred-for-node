@@ -1,7 +1,6 @@
 require( "plus" );
 
 var fs = require( "fs" ),
-	path = require( "path" ),
 	wrench = require( "wrench" ),
 	basename = require( "path" ).basename,
 	exec = require('child_process').exec,
@@ -66,7 +65,8 @@ function next() {
 					jquery: "var jQuery = require( \"./jquery\" );\n"
 				},
 				src = version < "1.5.2" ? [ "core" ]
-					: ( version < "1.7" ? [ "deferred" ] : [ "deferred", "callbacks" ] ),
+					: ( version < "1.7" ? [ "deferred" ] :
+						( version < "1.8" ? [ "deferred", "callbacks" ] : [ "core", "deferred", "callbacks" ] ) ),
 				count = src.length,
 				countNext = count + 1;
 
@@ -109,7 +109,7 @@ function next() {
 
 }
 
-path.exists( "./jquery", function( exists ) {
+fs.exists( "./jquery", function( exists ) {
 
 	if ( exists ) {
 		next();
