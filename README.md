@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/jaubourg/jquery-deferred-for-node.png)](http://travis-ci.org/jaubourg/jquery-deferred-for-node)
 jQuery deferreds for nodejs
 ===========================
 jQuery deferreds source and unit tests ported verbatim to nodejs using minimal, automated, code transformation.
