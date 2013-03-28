@@ -29,7 +29,9 @@ module.exports = {
 		}
 		return target;
 	},
-	inArray: indexOf,
+	inArray: function( array, elem ) {
+		return array ? indexOf( array, elem ) : -1;
+	},
 	noop: function() {},
 	type: function( obj ) {
 		var type = ( obj == null ? String : toString )( obj );
