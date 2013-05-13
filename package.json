@@ -1,0 +1,20 @@
+{
+	"name": "JQDeferredGenerator",
+	"version": "0.1.0",
+	"description": "Generator for JQDeferred",
+	"homepage": "https://github.com/jaubourg/jquery-deferred-for-node",
+	"author": "Julian Aubourg <j@ubourg.net> (http://jaubourg.net/)",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/jaubourg/jquery-deferred-for-node.git"
+	},
+	"main": "index.js",
+	"dependencies": {
+		"nodeunit": "0.8.0",
+		"plus": "0.1.0",
+		"wrench": "1.5.1"
+	},
+	"engines": {
+		"node": ">=0.6.0"
+	}
+}

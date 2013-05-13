@@ -5,7 +5,7 @@ var fs = require( "fs" ),
 	wrench = require( "wrench" ),
 	exec = require('child_process').exec,
 	imports = require( "./import/main" ),
-	versions,
+	versions = require( "./versions" ),
 	testDirs = [],
 	start = +new Date();
 
@@ -15,10 +15,10 @@ function next() {
 
 		var version = versions.shift(),
 			fullVersion = version + ( version.length < 5 ? ".0" : "" ),
-			packageDir = "./package/" + fullVersion + "/";
+			packageDir = "./generated/" + fullVersion + "/";
 
 		function test() {
-			var nodeunit = "nodeunit " + packageDir + "test";
+			var nodeunit = "node_modules/nodeunit/bin/nodeunit " + packageDir + "test";
 			console.log( "\n" + nodeunit + "\n" );
 			exec( nodeunit, function( error, stdout, stderr ) {
 				if ( error ) {
@@ -109,27 +109,10 @@ function next() {
 
 }
 
-console.log( "\n---- READING VERSIONS FILE ----\n" );
-
-fs.readFile( "./versions.txt", function( error, content ) {
-	if ( error ) {
-		throw error;
-	} else {
-		if ( versions ) {
-			process.nextTick( next );
-		}
-		versions = ( "" + content ).split( /\s+/ );
-	}
-});
-
 fs.exists( "./jquery", function( exists ) {
 
 	if ( exists ) {
-		if ( versions ) {
-			next();
-		} else {
-			versions = true;
-		}
+		next();
 	} else {
 		console.log( "\n---- CLONING JQUERY REPOSITORY ----\n" );
 		exec( "git clone git://github.com/jquery/jquery.git", function( error, stdout, stderr ) {
@@ -140,11 +123,7 @@ fs.exists( "./jquery", function( exists ) {
 
 			console.log( stdout );
 
-			if ( versions ) {
-				next();
-			} else {
-				versions = true;
-			}
+			next();
 		});
 	}
 
