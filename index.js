@@ -1,38 +1,83 @@
+var start = +new Date();
+
 require( "plus" );
 
-var fs = require( "fs" ),
-	path = require( "path" ),
-	wrench = require( "wrench" ),
-	exec = require('child_process').exec,
-	imports = require( "./import/main" ),
-	versions = require( "./versions" ),
+var exec = require('child_process').exec;
+var fs = require( "fs" );
+var imports = require( "./import/main" );
+var path = require( "path" );
+var versions = require( "./versions" );
+var wrench = require( "wrench" );
 
-	isWindows = path.sep === "\\",
-	testDirs = [],
-	start = +new Date();
+var adaptCommand = path.sep === "\\" ? function( expr ) {
+	// Windows
+	return expr.replace( /\//g, "\\" );
+} : function( expr ) {
+	// The rest of the free world
+	return expr.replace( ".cmd", "" )
+}
 
-function pather( expr ) {
-	return expr.replace( /\//g, path.sep );
+function fileForVersion( fileForVersion ) {
+	var current;
+	versions.forEach( function( version ) {
+		if ( version in fileForVersion ) {
+			current = fileForVersion[ version ] = fileForVersion[ version ].split( " " );
+		} else {
+			fileForVersion[ version ] = current;
+		}
+	} );
+	return fileForVersion;
+}
+
+var sourceForVersion = fileForVersion( {
+	"1.5": "core",
+	"1.5.2": "deferred",
+	"1.7": "deferred callbacks",
+	"1.8.0": "core deferred callbacks",
+	"2.1.0": "deferred callbacks"
+} );
+
+var unitsForVersion = fileForVersion( {
+	"1.5": "core",
+	"1.5.2": "deferred",
+	"1.7": "callbacks deferred"
+} );
+
+function throwOnError( func ) {
+	return function( error, arg ) {
+		if ( error ) {
+			throw error;
+		}
+		if ( func ) {
+			func( arg );
+		}
+	};
+}
+
+function throwOnCommandError( func, log ) {
+	return function( error, stdout, stderr ) {
+		if ( error ) {
+			throw stderr || error;
+		}
+		if ( log ) {
+			console.log( stdout );
+		}
+		func && func();
+	}
 }
 
 function next() {
 
 	if ( versions.length ) {
 
-		var version = versions.shift(),
-			fullVersion = version + ( version.length < 5 ? ".0" : "" ),
-			packageDir = "./generated/" + fullVersion + "/";
+		var version = versions.shift();
+		var fullVersion = version + ( version.length < 5 ? ".0" : "" );
+		var packageDir = "./generated/" + fullVersion + "/";
 
 		function test() {
-			var nodeunit = pather( "node_modules/.bin/nodeunit" + ( isWindows ? ".cmd " : " " ) + packageDir + "test" );
+			var nodeunit = adaptCommand( "node_modules/.bin/nodeunit.cmd " + packageDir + "test" );
 			console.log( "\n" + nodeunit + "\n" );
-			exec( nodeunit, function( error, stdout, stderr ) {
-				if ( error ) {
-					throw stderr;
-				}
-				console.log( stdout );
-				next();
-			});
+			exec( nodeunit, throwOnCommandError( next, "log" ) );
 		}
 
 		console.log( "\n---- STARTING GENERATION for JQUERY " + version + " ----\n" );
@@ -41,81 +86,61 @@ function next() {
 		wrench.mkdirSyncRecursive( packageDir + "lib", 0777);
 		wrench.mkdirSyncRecursive( packageDir + "test", 0777);
 
-		({
+		( {
+
 			"package.json": function( code ) {
 				return code.replace( "@VERSION@", fullVersion );
 			},
 			"lib/jquery.js": function( code ) {
 				return code;
 			}
-		}).forEach(function( filter, filename ) {
-			fs.readFile( "./template/" + path.basename( filename ), function( err, data ) {
-				if ( err ) {
-					throw err;
-				}
-				fs.writeFile( packageDir + filename, filter( "" + data ), function( err ) {
-					if ( err ) {
-						throw err;
-					}
-				});
-			});
-		});
 
-		exec( "git checkout " + version, { cwd: "./jquery" }, function( error, stdout, stderr ) {
+		} ).forEach( function( filter, filename ) {
 
-			if ( error ) {
-				throw stderr;
-			}
+			fs.readFile( "./template/" + path.basename( filename ), throwOnError( function( data ) {
+				fs.writeFile( packageDir + filename, filter( "" + data ), throwOnError );
+			} ) );
+
+		} );
+
+		exec( "git checkout " + version, { cwd: "./jquery" }, throwOnCommandError( function() {
 
 			var out = {
-					jquery: "var jQuery = require( \"./jquery\" );\n"
-				},
-				src = version < "1.5.2" ? [ "core" ]
-					: ( version < "1.7" ? [ "deferred" ] :
-						( version < "1.8" ? [ "deferred", "callbacks" ] : [ "core", "deferred", "callbacks" ] ) ),
-				count = src.length,
-				countNext = count + 1;
+				jquery: "var jQuery = require( \"./jquery\" );\n"
+			};
+			var src = sourceForVersion[ version ];
+			var units = unitsForVersion[ version ];
+			var srcCount = src.length;
+			var countBeforeTest = units.length + 1;
 
-			src.forEach(function( id ) {
-				out[ id ] = undefined; // for proper ordering
-				if ( id === "core" && version >= "1.5.2" ) {
-					// Let's filter out older stuff
-					countNext--;
-				} else {
-					imports.unit( id, function( err, code ) {
-						if ( err ) {
-							throw err;
-						}
-						fs.writeFile( packageDir + "test/" + id + ".js", code, function( err ) {
-							if ( err ) {
-								throw err;
-							}
-							if ( !( --countNext ) ) {
-								test();
-							}
-						});
-					});
+			var done = throwOnError( function() {
+				if ( !( --countBeforeTest ) ) {
+					test();
 				}
-				imports.src( id, function( err, code ) {
-					if ( err ) {
-						throw err;
-					}
+			} );
+
+			src.forEach( function( id ) {
+				out[ id ] = undefined; // for proper ordering
+				imports.src( id, throwOnError( function( code ) {
 					out[ id ] = code;
-					if ( !( --count ) ) {
-						fs.writeFile( packageDir + "lib/jquery-deferred.js", out.join( "\n" ), function( err ) {
-							if ( err ) {
-								throw err;
-							}
-							if ( !( --countNext ) ) {
-								test();
-							}
-						});
+					if ( !( --srcCount ) ) {
+						fs.writeFile( packageDir + "lib/jquery-deferred.js", out.join( "\n" ), done );
 					}
-				});
-			});
-		});
+				} ) );
+			} );
+
+			units.forEach( function( id ) {
+				imports.unit( id, throwOnError( function( code ) {
+					fs.writeFile( packageDir + "test/" + id + ".js", code, done );
+				} ) );
+			} );
+
+		} ) );
+
 	} else {
+
 		console.log( "\n---- FINISHED IN " + ( (new Date) - start ) * 0.001 + " sec ----\n" );
+
 	}
 
 }
@@ -123,19 +148,14 @@ function next() {
 fs.exists( "./jquery", function( exists ) {
 
 	if ( exists ) {
+
 		next();
+
 	} else {
+
 		console.log( "\n---- CLONING JQUERY REPOSITORY ----\n" );
-		exec( "git clone git://github.com/jquery/jquery.git", function( error, stdout, stderr ) {
+		exec( "git clone git://github.com/jquery/jquery.git", throwOnCommandError( next, "log" ) );
 
-			if ( error ) {
-				throw stderr;
-			}
-
-			console.log( stdout );
-
-			next();
-		});
 	}
 
-});
+} );
