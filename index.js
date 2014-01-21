@@ -6,8 +6,14 @@ var fs = require( "fs" ),
 	exec = require('child_process').exec,
 	imports = require( "./import/main" ),
 	versions = require( "./versions" ),
+
+	isWindows = path.sep === "\\",
 	testDirs = [],
 	start = +new Date();
+
+function pather( expr ) {
+	return expr.replace( /\//g, path.sep );
+}
 
 function next() {
 
@@ -18,7 +24,7 @@ function next() {
 			packageDir = "./generated/" + fullVersion + "/";
 
 		function test() {
-			var nodeunit = "node_modules/nodeunit/bin/nodeunit " + packageDir + "test";
+			var nodeunit = pather( "node_modules/.bin/nodeunit" + ( isWindows ? ".cmd " : " " ) + packageDir + "test" );
 			console.log( "\n" + nodeunit + "\n" );
 			exec( nodeunit, function( error, stdout, stderr ) {
 				if ( error ) {
@@ -72,19 +78,24 @@ function next() {
 
 			src.forEach(function( id ) {
 				out[ id ] = undefined; // for proper ordering
-				imports.unit( id, function( err, code ) {
-					if ( err ) {
-						throw err;
-					}
-					fs.writeFile( packageDir + "test/" + id + ".js", code, function( err ) {
+				if ( id === "core" && version >= "1.5.2" ) {
+					// Let's filter out older stuff
+					countNext--;
+				} else {
+					imports.unit( id, function( err, code ) {
 						if ( err ) {
 							throw err;
 						}
-						if ( !( --countNext ) ) {
-							test();
-						}
+						fs.writeFile( packageDir + "test/" + id + ".js", code, function( err ) {
+							if ( err ) {
+								throw err;
+							}
+							if ( !( --countNext ) ) {
+								test();
+							}
+						});
 					});
-				});
+				}
 				imports.src( id, function( err, code ) {
 					if ( err ) {
 						throw err;
