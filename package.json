@@ -10,11 +10,11 @@
 	},
 	"main": "index.js",
 	"dependencies": {
-		"nodeunit": "0.8.0",
+		"nodeunit": "0.8.2",
 		"plus": "0.1.0",
-		"wrench": "1.5.1"
+		"wrench": "1.5.6"
 	},
 	"engines": {
-		"node": ">=0.6.0"
+		"node": ">=0.10.0"
 	}
 }
