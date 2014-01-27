@@ -34,6 +34,8 @@ var sourceForVersion = fileForVersion( {
 	"1.5.2": "deferred",
 	"1.7": "deferred callbacks",
 	"1.8.0": "core deferred callbacks",
+	"1.11.0": "deferred callbacks",
+	"2.0.0": "core deferred callbacks",
 	"2.1.0": "deferred callbacks"
 } );
 
@@ -88,17 +90,19 @@ function next() {
 
 		( {
 
-			"package.json": function( code ) {
+			"template/package.json": function( code ) {
 				return code.replace( "@VERSION@", fullVersion );
 			},
-			"lib/jquery.js": function( code ) {
-				return code;
-			}
+			"template/jquery.js > lib/jquery.js": false,
+			"README.md": false
 
-		} ).forEach( function( filter, filename ) {
-
-			fs.readFile( "./template/" + path.basename( filename ), throwOnError( function( data ) {
-				fs.writeFile( packageDir + filename, filter( "" + data ), throwOnError );
+		} ).forEach( function( filter, expression ) {
+			expression = expression.split( /\s*>\s*/ );
+			var source = expression[ 0 ];
+			var target = expression[ 1 ] || path.basename( source );
+			fs.readFile( source, throwOnError( function( data ) {
+				data = data + "";
+				fs.writeFile( path.join( packageDir, target ), filter ? filter( data ) : data, throwOnError );
 			} ) );
 
 		} );
