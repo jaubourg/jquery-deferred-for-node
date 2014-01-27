@@ -1,6 +1,6 @@
-jQuery deferreds for nodejs
+jQuery Deferreds for nodejs
 ===========================
-jQuery deferreds source and unit tests ported verbatim to nodejs using minimal, automated, code transformation.
+jQuery Deferreds source and unit tests ported verbatim to nodejs using minimal, automated, code transformation.
 
 ### Rationale
 
@@ -15,7 +15,7 @@ This is the exact same code, running the exact same unit tests. Why use a bad co
 
 `var Deferred = require( "JQDeferred" );`
 
-### Correspondances
+### Correspondences
 
 | jQuery        | JQDeferred           |
 | -------------:|:--------------------:|
@@ -36,6 +36,6 @@ Just head to the [jQuery API site](http://api.jquery.com/):
 
 ### Versioning
 
-There is an exact correspondance between the version of the package and the version of jQuery from which it has been generated. So, if you want to use Deferreds as they were in jQuery 1.5.2, just use `npm install JQDeferred@1.5.2`.
+There is an exact correspondence between the version of the package and the version of jQuery from which it has been extracted. So, if you want to use Deferreds as they were in jQuery 1.5.2, just use `npm install JQDeferred@1.5.2`.
 
 Of course, this is not _really_ semantic versioning but it makes a lot more sense than maintaining a separate version.
