@@ -31,6 +31,7 @@ This is the exact same code, running the exact same unit tests. Why use a bad co
 ### Documentation
 
 Just head to the [jQuery API site](http://api.jquery.com/):
+
 * [`Deferred`](http://api.jquery.com/category/deferred-object/)
 * [`Callbacks`](http://api.jquery.com/category/callbacks-object/)
 
